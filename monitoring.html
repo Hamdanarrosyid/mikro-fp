@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Monitoring Graph</title>
+    <!-- Include Highcharts library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+    <h2>Water Monitoring Graph</h2>
+
+    <div id="waterGraph"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Use AJAX to fetch data from PHP script
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Parse JSON data received from PHP
+                    var data = JSON.parse(this.responseText);
+
+                    // Create a Highcharts graph
+                    Highcharts.chart('waterGraph', {
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Water Level Monitoring'
+                        },
+                        xAxis: {
+                            categories: data.created_at
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Water Level'
+                            }
+                        },
+                        series: [{
+                            name: 'Water Level',
+                            data: data.water_level
+                        }]
+                    });
+                }
+            };
+            xmlhttp.open('GET', 'get_data.php', true);
+            xmlhttp.send();
+        });
+    </script>
+</body>
+</html>
